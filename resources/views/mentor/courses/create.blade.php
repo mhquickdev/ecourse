@@ -276,7 +276,7 @@
 
             <!-- Left Sticky Sidebar -->
             <div class="w-full lg:w-1/3 xl:w-1/4 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-white rounded-xl shadow-sm p-6 space-y-6 flex-shrink-0">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Basic Information</h2>
+                <h2 class="text-2xl font-bold text-gray-800 mb-6">Basic Informations</h2>
 
                 <!-- Course Title -->
                 <div>
