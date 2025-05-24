@@ -25,7 +25,7 @@
 
             {{-- Status Filter --}}
             <div>
-                <select name="status" id="status-filter" class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <select name="status" id="status-filter" class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-3">
                     <option value="">All Statuses</option>
                     <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
                     <option value="draft" {{ request('status') == 'draft' ? 'selected' : '' }}>Draft</option>
@@ -35,7 +35,7 @@
 
             {{-- Category Filter --}}
             <div>
-                <select name="category" id="category-filter" class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                <select name="category" id="category-filter" class="form-select mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 p-3">
                     <option value="">All Categories</option>
                     @foreach ($categories as $category)
                         <option value="{{ $category->id }}" {{ request('category') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>

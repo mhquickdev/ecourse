@@ -17,9 +17,19 @@ class CourseController extends Controller
             $query->where('title', 'like', '%' . $search . '%');
         }
 
+        if ($request->filled('status')) {
+            $query->where('status', $request->input('status'));
+        }
+
+        if ($request->filled('category')) {
+            $query->where('category_id', $request->input('category'));
+        }
+
         $courses = $query->latest()->paginate(10)->withQueryString();
 
-        return view('admin.courses.index', compact('courses'));
+        $categories = Category::all();
+
+        return view('admin.courses.index', compact('courses', 'categories'));
     }
     public function edit(Course $course)
     {
