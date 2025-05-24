@@ -269,177 +269,143 @@
     @push('meta')
         <meta name="csrf-token" content="{{ csrf_token() }}">
     @endpush
-    <div class="p-6 flex flex-col lg:flex-row gap-6" x-data="courseFormAlpine('{{ csrf_token() }}')" x-init="init(); watchTagsInput();">
+    <div class="p-6 flex flex-col lg:flex-row gap-8 bg-gray-100 min-h-screen" x-data="courseFormAlpine('{{ csrf_token() }}')" x-init="init(); watchTagsInput();">
         <form action="{{ route('mentor.courses.store') }}" method="POST" enctype="multipart/form-data"
-            class="flex flex-col lg:flex-row gap-6 w-full" @change="isDirty = true" @submit.prevent="submitForm">
+            class="flex flex-col lg:flex-row gap-8 w-full relative" @change="isDirty = true" @submit.prevent="submitForm">
             @csrf
-
             <!-- Left Sticky Sidebar -->
-            <div class="w-full lg:w-1/3 xl:w-1/4 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-white rounded-xl shadow-sm p-6 space-y-6 flex-shrink-0">
-                <h2 class="text-2xl font-bold text-gray-800 mb-6">Basic Informations</h2>
-
-                <!-- Course Title -->
-                <div>
-                    <label for="title" class="block text-sm font-medium text-gray-700 mb-1">Course Title</label>
-                    <input type="text" name="title" id="title" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                <!-- Preview Image -->
-                <div>
-                    <label for="preview_image" class="block text-sm font-medium text-gray-700 mb-1">Preview
-                        Image</label>
-                    <input type="file" name="preview_image" id="preview_image" accept="image/*" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                </div>
-
-                <!-- Description -->
-                <div>
-                    <label for="description" class="block text-sm font-medium text-gray-700 mb-1">Course
-                        Description</label>
-                    <textarea name="description" id="description" rows="6" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                </div>
-
-                <!-- Category -->
-                <div>
-                    <label for="category_id" class="block text-sm font-medium text-gray-700 mb-1">Category</label>
-                    <select name="category_id" id="category_id" required
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="">Select a category</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </select>
-                </div>
-
-                <!-- Price -->
-                <div class="grid grid-cols-2 gap-4">
+            <div class="w-full lg:w-1/3 xl:w-1/4 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto bg-white rounded-2xl shadow-lg p-8 space-y-8 flex-shrink-0 border border-gray-200">
+                <h2 class="text-3xl font-extrabold text-blue-700 mb-8 tracking-tight">Create Course Info</h2>
+                <div class="space-y-4">
                     <div>
-                        <label for="price" class="block text-sm font-medium text-gray-700 mb-1">Price</label>
-                        <input type="number" name="price" id="price" step="0.01" min="0"
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                        <label for="title" class="block text-base font-semibold text-gray-700 mb-1">Course Title</label>
+                        <input type="text" name="title" id="title" required
+                            class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg">
                     </div>
-                    <div class="flex items-center">
-                        <label class="inline-flex items-center mt-6">
-                            <input type="checkbox" name="is_free" class="form-checkbox h-5 w-5 text-blue-600">
-                            <span class="ml-2 text-gray-700">Make this course free</span>
-                        </label>
+                    <div>
+                        <label for="preview_image" class="block text-base font-semibold text-gray-700 mb-1">Preview Image</label>
+                        <input type="file" name="preview_image" id="preview_image" accept="image/*" required
+                            class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                     </div>
-                </div>
-
-                <!-- Tags -->
-                <div>
-                    <label for="tags" class="block text-sm font-medium text-gray-700 mb-1">Tags (comma
-                        separated)</label>
-                    <input type="text" name="tags" id="tags" x-model="tagsInput"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                        placeholder="e.g. web development, javascript, php">
-                </div>
-
-                <!-- Demo Videos -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Demo Videos</label>
-                    <template x-for="(video, vIdx) in demoVideos" :key="vIdx">
-                        <div class="demo-video-entry flex flex-col md:flex-row gap-2 md:gap-4 mb-2 items-start md:items-center">
-                            <input type="text" :name="`demo_videos[${vIdx}][title]`" x-model="video.title"
-                                placeholder="Video Title"
-                                class="w-full md:flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            <template x-if="video.type === 'youtube'">
-                                <input type="text" :name="`demo_videos[${vIdx}][url]`" x-model="video.url"
-                                    placeholder="Video URL"
-                                    class="w-full md:flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            </template>
-                            <template x-if="video.type === 'hosted'">
-                                <input type="file" :name="`demo_videos[${vIdx}][file]`"
-                                    class="w-full md:flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                            </template>
-                            <select :name="`demo_videos[${vIdx}][type]`" x-model="video.type"
-                                class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <option value="youtube">YouTube</option>
-                                <option value="hosted">Hosted</option>
-                            </select>
-                            <button type="button" class="text-red-600 hover:text-red-800 ml-0 md:ml-2"
-                                @click="removeDemoVideo(vIdx)"><i class="fas fa-trash"></i></button>
+                    <div>
+                        <label for="description" class="block text-base font-semibold text-gray-700 mb-1">Course Description</label>
+                        <textarea name="description" id="description" rows="6" required
+                            class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"></textarea>
+                    </div>
+                    <div>
+                        <label for="category_id" class="block text-base font-semibold text-gray-700 mb-1">Category</label>
+                        <select name="category_id" id="category_id" required
+                            class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg">
+                            <option value="">Select a category</option>
+                            @foreach ($categories as $category)
+                                <option value="{{ $category->id }}">{{ $category->name }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label for="price" class="block text-base font-semibold text-gray-700 mb-1">Price</label>
+                            <input type="number" name="price" id="price" step="0.01" min="0"
+                                class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg">
                         </div>
-                    </template>
-                    <button type="button" class="mt-2 text-sm text-blue-600 hover:text-blue-800" @click="addDemoVideo">
-                        + Add Another Demo Video
-                    </button>
-                </div>
-
-                <!-- Course Status -->
-                <div>
-                    <label for="status" class="block text-sm font-medium text-gray-700 mb-1">Course Status</label>
-                    <select name="status" id="status" x-model="status" required
-                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                        <option value="draft">Draft</option>
-                        <option value="published">Published</option>
-                        <option value="archived">Archived</option>
-                    </select>
-                </div>
-
-                <!-- Loading/Progress Bar (moved to sidebar for context) -->
-                <div x-show="isLoading" class="mt-6">
-                    <div class="text-sm font-medium text-gray-700 mb-1">Uploading... <span x-text="uploadProgress + '%'"></span></div>
-                    <div class="w-full bg-gray-200 rounded-full h-2.5">
-                        <div class="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-linear" :style="`width: ${uploadProgress}%;`"></div>
+                        <div class="flex items-center mt-7">
+                            <label class="inline-flex items-center">
+                                <input type="checkbox" name="is_free" class="form-checkbox h-5 w-5 text-blue-600 rounded-xl">
+                                <span class="ml-3 text-gray-700 text-base">Make this course free</span>
+                            </label>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="tags" class="block text-base font-semibold text-gray-700 mb-1">Tags (comma separated)</label>
+                        <input type="text" name="tags" id="tags" x-model="tagsInput"
+                            class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg"
+                            placeholder="e.g. web development, javascript, php">
+                    </div>
+                    <div>
+                        <label for="status" class="block text-base font-semibold text-gray-700 mb-1">Course Status</label>
+                        <select name="status" id="status" x-model="status" required
+                            class="w-full px-5 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg">
+                            <option value="draft">Draft</option>
+                            <option value="published">Published</option>
+                            <option value="archived">Archived</option>
+                        </select>
                     </div>
                 </div>
-
-                <div class="flex justify-end">
+                <div class="flex justify-end pt-4">
                     <button type="submit"
-                        class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+                        class="px-8 py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 text-lg font-semibold transition"
                         :disabled="isLoading">
                         <span x-show="!isLoading">Create Course</span>
                         <span x-show="isLoading">Creating...</span>
                     </button>
                 </div>
             </div>
-
             <!-- Main Content Area -->
-            <div class="w-full lg:w-2/3 xl:w-3/4 bg-white rounded-xl shadow-sm p-6 space-y-6">
+            <div class="w-full lg:w-2/3 xl:w-3/4 space-y-8">
+                <!-- Demo Videos -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200 transform transition-all duration-300 hover:shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <label class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-video text-blue-600"></i>
+                            Demo Videos
+                        </label>
+                        <button type="button" class="px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition-all duration-300 transform hover:scale-105" @click="addDemoVideo">
+                            <i class="fas fa-plus mr-2"></i> Add Demo Video
+                        </button>
+                    </div>
+                    <div class="space-y-3">
+                        <template x-for="(video, vIdx) in demoVideos" :key="vIdx">
+                            <div class="flex flex-col md:flex-row gap-2 md:gap-4 items-start md:items-center bg-white p-3 rounded-xl border border-blue-200">
+                                <input type="text" :name="`demo_videos[${vIdx}][title]`" x-model="video.title" placeholder="Video Title" class="w-full md:flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                                <template x-if="video.type === 'youtube'">
+                                    <input type="text" :name="`demo_videos[${vIdx}][url]`" x-model="video.url" placeholder="Video URL" class="w-full md:flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                                </template>
+                                <template x-if="video.type === 'hosted'">
+                                    <input type="file" :name="`demo_videos[${vIdx}][file]`" class="w-full md:flex-1 px-4 py-2 border border-gray-300 rounded-lg">
+                                </template>
+                                <select :name="`demo_videos[${vIdx}][type]`" x-model="video.type" class="w-full md:w-auto px-4 py-2 border border-gray-300 rounded-lg">
+                                    <option value="youtube">YouTube</option>
+                                    <option value="hosted">Hosted</option>
+                                </select>
+                                <button type="button" class="text-red-600 hover:text-red-800 ml-0 md:ml-2" @click="removeDemoVideo(vIdx)"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </template>
+                    </div>
+                </div>
                 <!-- Course Modules -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">Course Modules</label>
+                <div class="space-y-6 relative pb-20">
+                    <div class="flex items-center justify-between mb-2">
+                        <label class="text-xl font-bold text-gray-800 flex items-center gap-2">
+                            <i class="fas fa-book text-blue-600"></i>
+                            Course Modules
+                        </label>
+                    </div>
                     <template x-for="(module, mIdx) in modules" :key="mIdx">
-                        <div class="module-entry bg-gray-50 p-4 rounded-lg mb-4">
-                            <div class="flex justify-between items-center mb-4 cursor-pointer"
-                                @click="module.open = !module.open">
-                                <h3 class="font-medium">Module <span x-text="mIdx + 1"></span>: <span
-                                        x-text="module.title || 'Untitled' "></span></h3>
+                        <div class="bg-white rounded-2xl shadow border border-blue-200 mb-4 transform transition-all duration-300 hover:shadow-lg">
+                            <div class="flex items-center justify-between px-6 py-4 cursor-pointer group" @click="module.open = !module.open">
+                                <div class="flex items-center gap-3">
+                                    <span class="text-lg font-bold text-blue-700">Module <span x-text="mIdx + 1"></span></span>
+                                    <span class="text-gray-700 font-semibold" x-text="module.title || 'Untitled'"></span>
+                                </div>
                                 <div class="flex items-center gap-2">
-                                    <button type="button" class="text-red-600 hover:text-red-800"
-                                        @click.stop="removeModule(mIdx)"><i class="fas fa-trash"></i></button>
-                                    <button type="button" class="text-gray-600 hover:text-gray-800"
-                                        @click.stop="module.open = !module.open">
-                                        <i :class="module.open ? 'fas fa-chevron-up' : 'fas fa-chevron-down'"></i>
-                                    </button>
+                                    <button type="button" class="text-red-600 hover:text-red-800" @click.stop="removeModule(mIdx)"><i class="fas fa-trash"></i></button>
+                                    <i :class="module.open ? 'fas fa-chevron-up text-blue-600' : 'fas fa-chevron-down text-gray-400'" class="transition"></i>
                                 </div>
                             </div>
-                            <div x-show="module.open" class="space-y-4">
-                                <input type="text" :name="`modules[${mIdx}][title]`" x-model="module.title"
-                                    placeholder="Module Title" required
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                <textarea :name="`modules[${mIdx}][description]`" x-model="module.description" placeholder="Module Description"
-                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
-                                <div class="contents-container space-y-4">
+                            <div x-show="module.open" class="px-6 pb-6 space-y-4">
+                                <input type="text" :name="`modules[${mIdx}][title]`" x-model="module.title" placeholder="Module Title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                <textarea :name="`modules[${mIdx}][description]`" x-model="module.description" placeholder="Module Description" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                                <div class="space-y-4">
                                     <template x-for="(content, cIdx) in module.contents" :key="cIdx">
-                                        <div class="content-entry bg-white p-4 rounded-lg border">
-                                            <div class="flex justify-between items-center mb-4">
-                                                <h4 class="font-medium">Content <span x-text="cIdx + 1"></span></h4>
-                                                <button type="button" class="text-red-600 hover:text-red-800"
-                                                    @click="removeContent(mIdx, cIdx)"><i
-                                                        class="fas fa-trash"></i></button>
+                                        <div class="bg-gray-50 rounded-xl border border-blue-200 p-4">
+                                            <div class="flex items-center justify-between mb-2">
+                                                <span class="font-semibold text-gray-700">Content <span x-text="cIdx + 1"></span></span>
+                                                <span class="inline-block px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold ml-2" x-text="content.type.charAt(0).toUpperCase() + content.type.slice(1)"></span>
+                                                <button type="button" class="text-red-600 hover:text-red-800" @click="removeContent(mIdx, cIdx)"><i class="fas fa-trash"></i></button>
                                             </div>
                                             <div class="space-y-4">
-                                                <input type="text"
-                                                    :name="`modules[${mIdx}][contents][${cIdx}][title]`"
-                                                    x-model="content.title" placeholder="Content Title" required
-                                                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                                <select :name="`modules[${mIdx}][contents][${cIdx}][type]`"
-                                                    x-model="content.type" required
-                                                    class="content-type w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                <input type="text" :name="`modules[${mIdx}][contents][${cIdx}][title]`" x-model="content.title" placeholder="Content Title" required class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                <select :name="`modules[${mIdx}][contents][${cIdx}][type]`" x-model="content.type" required class="content-type w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                                     <option value="video">Video</option>
                                                     <option value="quiz">Quiz</option>
                                                     <option value="file">File</option>
@@ -447,184 +413,110 @@
                                                 <!-- Video: URL or File, plus multiple Resources -->
                                                 <template x-if="content.type === 'video'">
                                                     <div>
-                                                        <label
-                                                            class="block text-xs font-medium text-gray-600 mb-1">Video
-                                                            Source</label>
-                                                        <select x-model="content.videoSource"
-                                                            class="mb-2 px-2 py-1 border rounded">
+                                                        <label class="block text-xs font-medium text-gray-600 mb-1">Video Source</label>
+                                                        <select x-model="content.videoSource" class="mb-2 px-2 py-1 border rounded">
                                                             <option value="url">Video URL</option>
                                                             <option value="file">Video File</option>
                                                         </select>
                                                         <template x-if="content.videoSource === 'url'">
-                                                            <template x-for="(url, vUrlIdx) in content.videoUrls"
-                                                                :key="vUrlIdx">
+                                                            <template x-for="(url, vUrlIdx) in content.videoUrls" :key="vUrlIdx">
                                                                 <div class="flex items-center gap-2 mb-2">
-                                                                    <input type="text"
-                                                                        :name="`modules[${mIdx}][contents][${cIdx}][video_urls][]`"
-                                                                        x-model="content.videoUrls[vUrlIdx]"
-                                                                        placeholder="Video URL"
-                                                                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                                                    <button type="button"
-                                                                        class="text-red-600 hover:text-red-800"
-                                                                        @click="removeVideoUrl(mIdx, cIdx, vUrlIdx)"><i
-                                                                            class="fas fa-minus"></i></button>
+                                                                    <input type="text" :name="`modules[${mIdx}][contents][${cIdx}][video_urls][]`" x-model="content.videoUrls[vUrlIdx]" placeholder="Video URL" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                                    <a :href="content.videoUrls[vUrlIdx]" target="_blank" class="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition-colors duration-300" x-show="content.videoUrls[vUrlIdx]">
+                                                                        <i class="fas fa-play mr-1"></i> Watch
+                                                                    </a>
+                                                                    <button type="button" class="text-red-600 hover:text-red-800" @click="removeVideoUrl(mIdx, cIdx, vUrlIdx)"><i class="fas fa-minus"></i></button>
                                                                 </div>
                                                             </template>
-                                                            <button type="button"
-                                                                class="text-sm text-blue-600 hover:text-blue-800 mb-2"
-                                                                @click="addVideoUrl(mIdx, cIdx)">+ Add Video
-                                                                URL</button>
+                                                            <button type="button" class="text-sm text-blue-600 hover:text-blue-800 mb-2" @click="addVideoUrl(mIdx, cIdx)">+ Add Video URL</button>
                                                         </template>
                                                         <template x-if="content.videoSource === 'file'">
-                                                            <template x-for="(file, vFileIdx) in content.videoFiles"
-                                                                :key="vFileIdx">
+                                                            <template x-for="(file, vFileIdx) in content.videoFiles" :key="vFileIdx">
                                                                 <div class="flex items-center gap-2 mb-2">
-                                                                    <input type="file"
-                                                                        :name="`modules[${mIdx}][contents][${cIdx}][video_files][]`"
-                                                                        class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                                                    <button type="button"
-                                                                        class="text-red-600 hover:text-red-800"
-                                                                        @click="removeVideoFile(mIdx, cIdx, vFileIdx)"><i
-                                                                            class="fas fa-minus"></i></button>
+                                                                    <input type="file" :name="`modules[${mIdx}][contents][${cIdx}][video_files][]`" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                                    <button type="button" class="text-red-600 hover:text-red-800" @click="removeVideoFile(mIdx, cIdx, vFileIdx)"><i class="fas fa-minus"></i></button>
                                                                 </div>
                                                             </template>
-                                                            <button type="button"
-                                                                class="text-sm text-blue-600 hover:text-blue-800 mb-2"
-                                                                @click="addVideoFile(mIdx, cIdx)">+ Add Video
-                                                                File</button>
+                                                            <button type="button" class="text-sm text-blue-600 hover:text-blue-800 mb-2" @click="addVideoFile(mIdx, cIdx)">+ Add Video File</button>
                                                         </template>
                                                         <!-- Multiple Resources for Video -->
                                                         <div class="mt-4">
-                                                            <label
-                                                                class="block text-xs font-medium text-gray-600 mb-1">Resources
-                                                                (optional)</label>
-                                                            <template x-for="(resource, rIdx) in content.resources"
-                                                                :key="rIdx">
+                                                            <label class="block text-xs font-medium text-gray-600 mb-1">Resources (optional)</label>
+                                                            <template x-for="(resource, rIdx) in content.resources" :key="rIdx">
                                                                 <div class="flex items-center gap-2 mb-2">
-                                                                    <select x-model="resource.type"
-                                                                        class="px-2 py-1 border rounded">
+                                                                    <select x-model="resource.type" class="px-2 py-1 border rounded">
                                                                         <option value="url">URL</option>
                                                                         <option value="file">File</option>
                                                                     </select>
                                                                     <template x-if="resource.type === 'url'">
-                                                                        <input type="text"
-                                                                            :name="`modules[${mIdx}][contents][${cIdx}][resources][${rIdx}][url]`"
-                                                                            x-model="resource.url"
-                                                                            placeholder="Resource URL"
-                                                                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                                        <input type="text" :name="`modules[${mIdx}][contents][${cIdx}][resources][${rIdx}][url]`" x-model="resource.url" placeholder="Resource URL" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                                                     </template>
                                                                     <template x-if="resource.type === 'file'">
-                                                                        <input type="file"
-                                                                            :name="`modules[${mIdx}][contents][${cIdx}][resources][${rIdx}][file]`"
-                                                                            class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                                        <input type="file" :name="`modules[${mIdx}][contents][${cIdx}][resources][${rIdx}][file]`" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
                                                                     </template>
-                                                                    <button type="button"
-                                                                        class="text-red-600 hover:text-red-800"
-                                                                        @click="removeVideoResource(mIdx, cIdx, rIdx)"><i
-                                                                            class="fas fa-minus"></i></button>
+                                                                    <button type="button" class="text-red-600 hover:text-red-800" @click="removeVideoResource(mIdx, cIdx, rIdx)"><i class="fas fa-minus"></i></button>
                                                                 </div>
                                                             </template>
-                                                            <button type="button"
-                                                                class="text-sm text-blue-600 hover:text-blue-800 mb-2"
-                                                                @click="addVideoResource(mIdx, cIdx)">+ Add
-                                                                Resource</button>
+                                                            <button type="button" class="text-sm text-blue-600 hover:text-blue-800 mb-2" @click="addVideoResource(mIdx, cIdx)">+ Add Resource</button>
                                                         </div>
                                                     </div>
                                                 </template>
                                                 <!-- File (multiple URLs and uploads) -->
                                                 <template x-if="content.type === 'file'">
                                                     <div>
-                                                        <label
-                                                            class="block text-xs font-medium text-gray-600 mb-1">File
-                                                            URLs</label>
-                                                        <template x-for="(url, fUrlIdx) in content.fileUrls"
-                                                            :key="fUrlIdx">
+                                                        <label class="block text-xs font-medium text-gray-600 mb-1">File URLs</label>
+                                                        <template x-for="(url, fUrlIdx) in content.fileUrls" :key="fUrlIdx">
                                                             <div class="flex items-center gap-2 mb-2">
-                                                                <input type="text"
-                                                                    :name="`modules[${mIdx}][contents][${cIdx}][file_urls][]`"
-                                                                    x-model="content.fileUrls[fUrlIdx]"
-                                                                    placeholder="File URL"
-                                                                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                                                <button type="button"
-                                                                    class="text-red-600 hover:text-red-800"
-                                                                    @click="removeFileUrl(mIdx, cIdx, fUrlIdx)"><i
-                                                                        class="fas fa-minus"></i></button>
+                                                                <input type="text" :name="`modules[${mIdx}][contents][${cIdx}][file_urls][]`" x-model="content.fileUrls[fUrlIdx]" placeholder="File URL" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                                <button type="button" class="text-red-600 hover:text-red-800" @click="removeFileUrl(mIdx, cIdx, fUrlIdx)"><i class="fas fa-minus"></i></button>
                                                             </div>
                                                         </template>
-                                                        <button type="button"
-                                                            class="text-sm text-blue-600 hover:text-blue-800 mb-2"
-                                                            @click="addFileUrl(mIdx, cIdx)">+ Add File URL</button>
-                                                        <label
-                                                            class="block text-xs font-medium text-gray-600 mb-1 mt-2">File
-                                                            Uploads</label>
-                                                        <template x-for="(file, fFileIdx) in content.fileFiles"
-                                                            :key="fFileIdx">
+                                                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 mb-2" @click="addFileUrl(mIdx, cIdx)">+ Add File URL</button>
+                                                        <label class="block text-xs font-medium text-gray-600 mb-1 mt-2">File Uploads</label>
+                                                        <template x-for="(file, fFileIdx) in content.fileFiles" :key="fFileIdx">
                                                             <div class="flex items-center gap-2 mb-2">
-                                                                <input type="file"
-                                                                    :name="`modules[${mIdx}][contents][${cIdx}][file_files][]`"
-                                                                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                                                <button type="button"
-                                                                    class="text-red-600 hover:text-red-800"
-                                                                    @click="removeFileFile(mIdx, cIdx, fFileIdx)"><i
-                                                                        class="fas fa-minus"></i></button>
+                                                                <input type="file" :name="`modules[${mIdx}][contents][${cIdx}][file_files][]`" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                                <button type="button" class="text-red-600 hover:text-red-800" @click="removeFileFile(mIdx, cIdx, fFileIdx)"><i class="fas fa-minus"></i></button>
                                                             </div>
                                                         </template>
-                                                        <button type="button"
-                                                            class="text-sm text-blue-600 hover:text-blue-800 mb-2"
-                                                            @click="addFileFile(mIdx, cIdx)">+ Add File Upload</button>
+                                                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 mb-2" @click="addFileFile(mIdx, cIdx)">+ Add File Upload</button>
                                                     </div>
                                                 </template>
                                                 <!-- Quiz -->
                                                 <template x-if="content.type === 'quiz'">
                                                     <div class="quiz-fields space-y-2">
-                                                        <input type="text"
-                                                            :name="`modules[${mIdx}][contents][${cIdx}][quiz_question]`"
-                                                            x-model="content.quiz_question"
-                                                            placeholder="Quiz Question"
-                                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2">
-                                                        <template x-for="(option, oIdx) in content.quiz_options"
-                                                            :key="option.id">
+                                                        <input type="text" :name="`modules[${mIdx}][contents][${cIdx}][quiz_question]`" x-model="content.quiz_question" placeholder="Quiz Question" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2">
+                                                        <template x-for="(option, oIdx) in content.quiz_options" :key="option.id">
                                                             <div class="flex gap-2 mb-2 quiz-option-row">
-                                                                <input type="text"
-                                                                    :name="`modules[${mIdx}][contents][${cIdx}][quiz_options][${oIdx}][value]`"
-                                                                    x-model="option.value"
-                                                                    placeholder="Option"
-                                                                    class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
-                                                                <input type="hidden"
-                                                                    :name="`modules[${mIdx}][contents][${cIdx}][quiz_options][${oIdx}][id]`"
-                                                                    :value="option.id">
-                                                                <input type="radio"
-                                                                    :name="`modules[${mIdx}][contents][${cIdx}][quiz_answer_id]`"
-                                                                    :value="option.id"
-                                                                    x-model="content.quiz_answer_id">
-                                                                <button type="button"
-                                                                    class="text-red-600 hover:text-red-800 ml-2"
-                                                                    @click="removeQuizOption(mIdx, cIdx, oIdx)">Remove</button>
+                                                                <input type="text" :name="`modules[${mIdx}][contents][${cIdx}][quiz_options][${oIdx}][value]`" x-model="option.value" placeholder="Option" class="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                                                                <input type="hidden" :name="`modules[${mIdx}][contents][${cIdx}][quiz_options][${oIdx}][id]`" :value="option.id">
+                                                                <input type="radio" :name="`modules[${mIdx}][contents][${cIdx}][quiz_answer_id]`" :value="option.id" x-model="content.quiz_answer_id">
+                                                                <button type="button" class="text-red-600 hover:text-red-800 ml-2" @click="removeQuizOption(mIdx, cIdx, oIdx)">Remove</button>
                                                             </div>
                                                         </template>
                                                         <!-- Hidden input for the selected answer value -->
-                                                        <input type="hidden"
-                                                            :name="`modules[${mIdx}][contents][${cIdx}][quiz_answer]`"
-                                                            :value="content.quiz_options.find(opt => opt.id === content.quiz_answer_id)?.value || ''">
-                                                        <button type="button"
-                                                            class="text-sm text-blue-600 hover:text-blue-800 mb-2"
-                                                            @click="addQuizOption(mIdx, cIdx)">+ Add Option</button>
+                                                        <input type="hidden" :name="`modules[${mIdx}][contents][${cIdx}][quiz_answer]`" :value="content.quiz_options.find(opt => opt.id === content.quiz_answer_id)?.value || ''">
+                                                        <button type="button" class="text-sm text-blue-600 hover:text-blue-800 mb-2" @click="addQuizOption(mIdx, cIdx)">+ Add Option</button>
                                                     </div>
                                                 </template>
                                             </div>
                                         </div>
                                     </template>
+                                    <button type="button" class="add-content px-4 py-2 bg-blue-100 text-blue-700 rounded-lg font-semibold hover:bg-blue-200 transition" @click="addContent(mIdx)">
+                                        <i class="fas fa-plus mr-2"></i> Add Content
+                                    </button>
                                 </div>
-                                <button type="button" class="add-content text-sm text-blue-600 hover:text-blue-800"
-                                    @click="addContent(mIdx)">
-                                    + Add Content
-                                </button>
                             </div>
                         </div>
                     </template>
-                    <button type="button" id="add-module" class="mt-4 text-sm text-blue-600 hover:text-blue-800"
+                </div>
+                <!-- Floating Add Module Button -->
+                <div class="fixed bottom-8 right-8 z-50">
+                    <button type="button" 
+                        class="flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-full shadow-lg hover:bg-blue-700 transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
                         @click="addModule()">
-                        + Add Module
+                        <i class="fas fa-plus"></i>
+                        <span>Add Module</span>
                     </button>
                 </div>
             </div>

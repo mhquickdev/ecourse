@@ -1,141 +1,62 @@
-@php
-    // Dummy data for demonstration
-    $earnings = '1,569.00';
-    $balance = '3,917.80';
-    $sales = '10,211.50';
-@endphp
+@extends('layouts.app')
 
-@extends('layouts.mentor')
+@section('header')
+    <h2 class="text-2xl font-bold text-gray-800 leading-tight">
+        Mentor Dashboard
+    </h2>
+@endsection
 
 @section('content')
-    <!-- Top Bar -->
-    <header class="h-16 bg-white flex items-center px-8 shadow-sm justify-between sticky top-0 z-10">
-        <div class="flex items-center gap-6">
-            <div class="flex items-center gap-2 text-gray-500">
-                <i class="fa-solid fa-dollar-sign text-blue-500"></i>
-                <span class="font-semibold">Earnings</span>
-                <span class="font-bold text-lg text-gray-800">$12.3K</span>
-            </div>
-            <div class="flex items-center gap-2 text-gray-500">
-                <i class="fa-solid fa-chart-line text-green-500"></i>
-                <span class="font-semibold">Sales</span>
-                <span class="font-bold text-lg text-gray-800">264</span>
-            </div>
-            <div class="relative">
-                <input type="text" placeholder="Search..." class="pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-200 bg-gray-50" />
-                <i class="fa-solid fa-search absolute left-3 top-2.5 text-gray-400"></i>
-            </div>
-        </div>
-        <div class="flex items-center gap-4">
-            <button class="relative">
-                <i class="fa-regular fa-bell text-xl text-gray-400"></i>
-                <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
-            </button>
-            <img src="https://i.pravatar.cc/32" class="rounded-full w-8 h-8 border-2 border-blue-500" alt="User" />
-        </div>
-    </header>
-
-    <!-- Dashboard Content -->
-    <main class="flex-1 p-6 md:p-10 bg-gray-50">
-        <!-- Stat Cards -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div class="bg-gradient-to-r from-blue-100 to-blue-50 p-6 rounded-xl shadow text-center">
-                <div class="text-xs text-blue-700 font-semibold uppercase tracking-wider">Earnings this month</div>
-                <div class="text-3xl font-bold mt-2 text-blue-900">${{ $earnings }}</div>
-            </div>
-            <div class="bg-gradient-to-r from-green-100 to-green-50 p-6 rounded-xl shadow text-center">
-                <div class="text-xs text-green-700 font-semibold uppercase tracking-wider">Account Balance</div>
-                <div class="text-3xl font-bold mt-2 text-green-900">${{ $balance }}</div>
-            </div>
-            <div class="bg-gradient-to-r from-purple-100 to-purple-50 p-6 rounded-xl shadow text-center">
-                <div class="text-xs text-purple-700 font-semibold uppercase tracking-wider">Total Sales</div>
-                <div class="text-3xl font-bold mt-2 text-purple-900">${{ $sales }}</div>
-            </div>
-        </div>
-
-        <!-- Main Grid -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <!-- Chart & Earnings -->
-            <div class="lg:col-span-2 flex flex-col gap-8">
-                <div class="bg-white rounded-xl shadow p-6">
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="font-semibold text-lg text-gray-800">Earnings</div>
-                        <div class="space-x-2">
-                            <button class="text-xs px-3 py-1 rounded bg-blue-100 text-blue-700 font-semibold">Previous Week</button>
-                            <button class="text-xs px-3 py-1 rounded bg-gray-100 text-gray-700 font-semibold">Last Week</button>
-                        </div>
+<div class="py-12">
+    <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Sidebar -->
+            <aside class="md:w-1/4 w-full bg-white rounded-xl shadow p-6 sticky top-8 h-fit mb-8 md:mb-0">
+                <div class="flex flex-col items-center">
+                    <img src="{{ $mentor->profile_image ? Storage::url($mentor->profile_image) : 'https://i.pravatar.cc/120' }}" class="w-24 h-24 rounded-full border-4 border-blue-200 object-cover shadow mb-3" alt="Profile Image">
+                    <h3 class="text-lg font-bold text-gray-800">{{ $mentor->name }}</h3>
+                    <p class="text-gray-500 text-sm mb-2">@ {{ $mentor->username }}</p>
+                    <a href="{{ route('mentor.profile') }}" class="mt-2 px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-semibold">Edit Profile</a>
+                </div>
+            </aside>
+            <!-- Main Content -->
+            <main class="flex-1">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div class="bg-blue-100 p-6 rounded-lg shadow-md flex flex-col items-center">
+                        <i class="fa-solid fa-book-open text-3xl text-blue-600 mb-2"></i>
+                        <div class="text-2xl font-bold text-blue-800">{{ $courses_count }}</div>
+                        <div class="text-blue-700">Courses</div>
                     </div>
-                    <div class="h-48 flex items-center justify-center text-gray-400">
-                        <!-- Placeholder for chart -->
-                        <span>Generated Income Chart</span>
+                    <div class="bg-green-100 p-6 rounded-lg shadow-md flex flex-col items-center">
+                        <i class="fa-solid fa-users text-3xl text-green-600 mb-2"></i>
+                        <div class="text-2xl font-bold text-green-800">{{ $students_count }}</div>
+                        <div class="text-green-700">Students</div>
+                    </div>
+                    <div class="bg-yellow-100 p-6 rounded-lg shadow-md flex flex-col items-center">
+                        <i class="fa-solid fa-star text-3xl text-yellow-500 mb-2"></i>
+                        <div class="text-2xl font-bold text-yellow-800">{{ $average_rating }}</div>
+                        <div class="text-yellow-700">Avg. Rating</div>
                     </div>
                 </div>
-            </div>
-            <!-- Transactions & Comments -->
-            <div class="flex flex-col gap-8">
                 <div class="bg-white rounded-xl shadow p-6">
-                    <div class="font-semibold text-lg text-gray-800 mb-4">Transactions</div>
-                    <ul class="space-y-4">
-                        <li class="flex items-center justify-between">
-                            <div>
-                                <span class="font-medium text-gray-900">Learn Angular Fundamentals</span>
-                                <span class="block text-xs text-gray-400">Invoice #8737 - $89 USD</span>
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Recent Courses</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        @forelse($recent_courses as $course)
+                            <div class="bg-gray-50 rounded-lg p-4 flex flex-col">
+                                <h4 class="font-bold text-blue-700 mb-1">{{ $course->title }}</h4>
+                                <p class="text-gray-600 text-sm mb-2">{{ $course->description }}</p>
+                                <div class="flex items-center gap-2 mt-auto">
+                                    <span class="text-xs text-gray-400">{{ $course->created_at->diffForHumans() }}</span>
+                                    <a href="{{ route('courses.show', $course->id) }}" class="ml-auto text-blue-600 hover:underline text-sm">View</a>
+                                </div>
                             </div>
-                            <span class="text-xs text-gray-400">15 NOV 2018</span>
-                        </li>
-                        <li class="flex items-center justify-between">
-                            <div>
-                                <span class="font-medium text-gray-900">Introduction to TypeScript</span>
-                                <span class="block text-xs text-gray-400">Invoice #8736 - $89 USD</span>
-                            </div>
-                            <span class="text-xs text-gray-400">14 NOV 2018</span>
-                        </li>
-                        <li class="flex items-center justify-between">
-                            <div>
-                                <span class="font-medium text-gray-900">Angular Unit Testing</span>
-                                <span class="block text-xs text-gray-400">Invoice #8735 - $89 USD</span>
-                            </div>
-                            <span class="text-xs text-gray-400">13 NOV 2018</span>
-                        </li>
-                        <li class="flex items-center justify-between">
-                            <div>
-                                <span class="font-medium text-gray-900">Angular Routing In-Depth</span>
-                                <span class="block text-xs text-gray-400">Invoice #8734 - $89 USD</span>
-                            </div>
-                            <span class="text-xs text-gray-400">12 NOV 2018</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="bg-white rounded-xl shadow p-6">
-                    <div class="font-semibold text-lg text-gray-800 mb-4">Comments</div>
-                    <ul class="space-y-4">
-                        <li>
-                            <div class="flex items-center justify-between">
-                                <span class="font-medium text-gray-900">Laza Bogdan</span>
-                                <span class="text-xs text-gray-400">27 min ago</span>
-                            </div>
-                            <div class="text-xs text-gray-600">How can I load Charts on a page?</div>
-                        </li>
-                        <li>
-                            <div class="flex items-center justify-between">
-                                <span class="font-medium text-gray-900">FrontendMatter</span>
-                                <span class="text-xs text-gray-400">just now</span>
-                            </div>
-                            <div class="text-xs text-gray-600">Thank you for purchasing our course! Please have a look at the charts library documentation <a href="#" class="text-blue-500 underline">here</a> and follow the instructions.</div>
-                        </li>
-                    </ul>
-                    <div class="mt-4 flex">
-                        <input type="text" class="flex-1 border rounded-l px-3 py-2 text-sm focus:outline-none" placeholder="Quick Reply">
-                        <button class="bg-blue-500 text-white px-4 rounded-r">Send</button>
+                        @empty
+                            <div class="col-span-3 text-gray-500">No recent courses</div>
+                        @endforelse
                     </div>
                 </div>
-            </div>
+            </main>
         </div>
-
-        <!-- Footer -->
-        <div class="mt-12 text-center text-xs text-gray-400">
-            Luma is a beautifully crafted user interface for modern Education Platforms, including Courses & Tutorials, Video Lessons, Student and Teacher Dashboard, Curriculum Management, Earnings and Reporting, and more.<br>
-            Terms. Privacy policy. Copyright 2024. All rights reserved.
-        </div>
-    </main>
+    </div>
+</div>
 @endsection 

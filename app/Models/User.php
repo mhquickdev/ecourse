@@ -22,6 +22,15 @@ class User extends Authenticatable
         'email',
         'password',
         'role_id',
+        'first_name',
+        'last_name',
+        'username',
+        'phone',
+        'bio',
+        'education',
+        'experience',
+        'skills',
+        'profile_image',
     ];
 
     /**
@@ -42,6 +51,9 @@ class User extends Authenticatable
     protected $casts = [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'education' => 'array',
+            'experience' => 'array',
+            'skills' => 'array',
         ];
 
     public function role()
