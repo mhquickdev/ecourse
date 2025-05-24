@@ -1,56 +1,33 @@
 @extends('layouts.mentor')
 
 @section('content')
-<div class="p-6">
+<div class="p-8">
     <div class="max-w-7xl mx-auto">
-        <div class="flex justify-between items-center mb-6">
-            <h2 class="text-2xl font-bold text-gray-800">My Courses</h2>
-            <a href="{{ route('mentor.courses.create') }}" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2">
-                <i class="fas fa-plus mr-2"></i> Create New Course
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+            <h2 class="text-3xl font-extrabold text-gray-900">My Courses</h2>
+            <a href="{{ route('mentor.courses.create') }}" class="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-xl shadow hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 font-semibold transition text-lg">
+                <i class="fas fa-plus"></i> Create New Course
             </a>
         </div>
-
         @if(session('success'))
             <div class="mb-6 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
                 <span class="block sm:inline">{{ session('success') }}</span>
             </div>
         @endif
-
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             @forelse($courses as $course)
-                <div class="bg-white rounded-xl shadow-sm overflow-hidden">
-                    <div class="relative">
-                        <img src="{{ Storage::url($course->preview_image) }}" alt="{{ $course->title }}" class="w-full h-48 object-cover">
-                        <div class="absolute top-2 right-2">
-                            <span class="px-2 py-1 text-xs font-semibold rounded-full 
-                                {{ $course->status === 'published' ? 'bg-green-100 text-green-800' : 
-                                   ($course->status === 'draft' ? 'bg-yellow-100 text-yellow-800' : 'bg-gray-100 text-gray-800') }}">
-                                {{ ucfirst($course->status) }}
-                            </span>
-                        </div>
-                    </div>
-                    <div class="p-4">
-                        <h3 class="font-semibold text-lg text-gray-800 mb-2">{{ $course->title }}</h3>
-                        <p class="text-gray-600 text-sm mb-4 line-clamp-2">{{ Str::limit(strip_tags($course->description), 100) }}</p>
-                        <div class="flex items-center justify-between">
-                            <div class="text-sm text-gray-500">
-                                <span class="font-medium">{{ $course->modules->count() }}</span> Modules
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <a href="{{ route('mentor.courses.edit', $course) }}" class="text-blue-600 hover:text-blue-800">
-                                    <i class="fas fa-edit"></i>
-                                </a>
-                                <form action="{{ route('mentor.courses.destroy', $course) }}" method="POST" class="inline">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Are you sure you want to delete this course?')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                @include('components.course-card', [
+                    'image' => $course->preview_image ? (Str::startsWith($course->preview_image, 'http') ? $course->preview_image : asset('storage/'.$course->preview_image)) : 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80',
+                    'discount' => $course->is_free ? 'Free' : null,
+                    'instructor_avatar' => $course->user && $course->user->profile_image ? Storage::url($course->user->profile_image) : 'https://i.pravatar.cc/120',
+                    'instructor' => $course->user->name ?? 'Instructor',
+                    'category' => $course->category->name ?? 'General',
+                    'title' => $course->title,
+                    'rating' => $course->rating ?? '4.5',
+                    'reviews' => $course->reviews_count ?? '15',
+                    'price' => $course->price ?? '0',
+                    'url' => route('mentor.courses.edit', $course),
+                ])
             @empty
                 <div class="col-span-full">
                     <div class="text-center py-12">
@@ -65,6 +42,9 @@
                     </div>
                 </div>
             @endforelse
+        </div>
+        <div class="mt-8 flex justify-center">
+            {{ $courses->links('vendor.pagination.tailwind') }}
         </div>
     </div>
 </div>

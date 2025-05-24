@@ -16,65 +16,52 @@
 <body class="bg-gray-50 min-h-screen" x-data="{ sidebarOpen: false }">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
-        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed z-30 inset-y-0 left-0 w-64 bg-white shadow-lg flex flex-col transform transition-transform duration-200 ease-in-out md:relative md:translate-x-0 md:flex md:w-64">
+        <aside :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'" class="fixed z-30 inset-y-0 left-0 w-64 bg-white shadow-xl flex flex-col rounded-2xl m-4 md:relative md:translate-x-0 md:flex md:w-64 transition-transform duration-200 ease-in-out">
             <div class="h-16 flex items-center px-6 border-b">
-                <span class="font-bold text-2xl text-blue-600 tracking-wide">Luma</span>
+                <span class="font-bold text-2xl text-blue-600 tracking-wide">Quick LMS</span>
                 <button class="ml-auto md:hidden" @click="sidebarOpen = false">
                     <i class="fa-solid fa-xmark text-xl"></i>
                 </button>
             </div>
-            <nav class="flex-1 px-4 py-6 space-y-1">
-                <div class="text-xs text-gray-400 uppercase mb-2 tracking-wider">Mentor Panel</div>
-                <a href="{{ route('mentor.dashboard') }}" class="flex items-center px-3 py-2 rounded-lg bg-blue-100 text-blue-700 font-semibold gap-2">
-                    <i class="fa-solid fa-gauge"></i> Dashboard
+            <nav class="flex-1 px-4 py-6 space-y-2">
+                <a href="{{ route('mentor.dashboard') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('mentor.dashboard') ? 'bg-[#4F46E5] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
+                    <i class="fa-solid fa-home"></i> Dashboard
                 </a>
-                <a href="{{ route('mentor.courses.index') }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 gap-2">
-                    <i class="fa-solid fa-book"></i> Manage Courses
+                <a href="{{ route('mentor.courses.index') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('mentor.courses.*') ? 'bg-[#F472B6] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
+                    <i class="fa-solid fa-book"></i> Courses
                 </a>
-                <a href="{{ route('mentor.profile') }}" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 gap-2">
-                    <i class="fa-solid fa-user"></i> Profile Settings
+                <a href="{{ route('mentor.profile') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('mentor.profile') ? 'bg-[#34D399] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
+                    <i class="fa-solid fa-user"></i> Profile
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 gap-2">
-                    <i class="fa-solid fa-pen"></i> Manage Quizzes
-                </a>
-                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 gap-2">
+                <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
                     <i class="fa-solid fa-dollar-sign"></i> Earnings
                 </a>
-                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 gap-2">
-                    <i class="fa-solid fa-file-invoice"></i> Statement
-                </a>
-                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 gap-2">
-                    <i class="fa-solid fa-edit"></i> Edit Course
-                </a>
-                <a href="#" class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-100 gap-2">
-                    <i class="fa-solid fa-puzzle-piece"></i> Edit Quiz
+                <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
+                    <i class="fa-solid fa-cog"></i> Settings
                 </a>
             </nav>
-            <div class="p-4 border-t text-xs text-gray-400">Luma &copy; 2024</div>
+            <div class="p-4 border-t text-xs text-gray-400">MHQuickDEV &copy; 2025</div>
         </aside>
         <!-- Main Content -->
         <div class="flex-1 flex flex-col min-h-screen bg-gray-50">
             <!-- Header -->
-            <header class="h-16 bg-white flex items-center px-4 md:px-8 shadow-sm sticky top-0 z-10 w-full">
+            <header class="flex items-center justify-between bg-white rounded-xl shadow px-8 py-4 mt-6 mx-6 mb-8">
                 <button class="md:hidden mr-4" @click="sidebarOpen = true">
                     <i class="fa-solid fa-bars text-2xl"></i>
                 </button>
-                <div class="flex-1"></div>
-                <div class="flex items-center gap-4 ml-auto">
-                    <button class="relative">
-                        <i class="fa-regular fa-bell text-xl text-gray-400"></i>
-                        <span class="absolute top-0 right-0 inline-block w-2 h-2 bg-red-500 rounded-full"></span>
-                    </button>
+                
+                    <a class="flex items-center gap-2 text-blue-600 font-semibold text-lg border border-blue-200 bg-white rounded-xl px-4 py-2" href="{{ route('home') }}">
+                        <i class="fa-solid fa-house"></i>
+                        Home</a>
+                
+                <div class="flex items-center gap-4">
                     <div class="relative" x-data="{ open: false }">
-                        @php $user = auth()->user(); @endphp
-                        @if($user && $user->profile_image)
-                            <img src="{{ Storage::url($user->profile_image) }}" class="rounded-full w-8 h-8 border-2 border-blue-500 cursor-pointer" alt="User" @click="open = !open">
-                        @else
-                            <span class="inline-block w-8 h-8 rounded-full bg-gray-200 border-2 border-blue-500 cursor-pointer flex items-center justify-center" @click="open = !open">
-                                <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A13.937 13.937 0 0112 15c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                            </span>
-                        @endif
-                        <div x-show="open" @click.away="open = false" class="absolute right-0 mt-2 w-48 bg-white rounded shadow-lg py-2 z-50">
+                        <button @click="open = !open" class="flex items-center gap-2 px-4 py-2 rounded-xl border border-blue-200 bg-white shadow hover:bg-blue-50 transition focus:outline-none">
+                            <i class="fa fa-user-circle text-2xl text-blue-400"></i>
+                            <span class="font-semibold text-gray-700">Hi, {{ Auth::user()->name ?? 'Super Admin' }}!</span>
+                            <svg class="w-4 h-4 ml-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                        </button>
+                        <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
                             <a href="{{ route('mentor.profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50"><i class="fa-solid fa-user mr-2"></i>Profile Settings</a>
                             <a href="{{ route('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50"><i class="fa-solid fa-sign-out-alt mr-2"></i>Logout</a>
                         </div>

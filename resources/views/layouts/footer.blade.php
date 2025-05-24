@@ -11,7 +11,7 @@
                             <circle cx="24" cy="28" r="4" fill="#2D2363"/>
                         </svg>
                     </span>
-                    <span class="font-extrabold text-2xl text-white tracking-tight">Dreams <span class="text-[#F85A7E] text-xs align-top font-bold ml-1">LMS</span></span>
+                    <span class="font-extrabold text-2xl text-white tracking-tight">Quick <span class="text-[#F85A7E] text-xs align-top font-bold ml-1">LMS</span></span>
                 </div>
                 <p class="mb-6 text-sm text-white/90 max-w-xs">Platform designed to help organizations, educators, and learners manage, deliver, and track learning and training activities.</p>
                 <div class="flex gap-3">
@@ -24,39 +24,39 @@
                 <div>
                     <h4 class="font-bold mb-2 border-b-2 border-[#F85A7E] inline-block pb-1">Support</h4>
                     <ul class="space-y-2 mt-2 text-sm">
-                        <li><a href="#" class="hover:text-[#F85A7E]">Education</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Enroll a Course</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Orders</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Payments</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Contact Us</a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-bold mb-2 border-b-2 border-[#F85A7E] inline-block pb-1">About</h4>
                     <ul class="space-y-2 mt-2 text-sm">
-                        <li><a href="#" class="hover:text-[#F85A7E]">Categories</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Services</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">About Us</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">FAQ</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Blog</a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-bold mb-2 border-b-2 border-[#F85A7E] inline-block pb-1">Useful Links</h4>
                     <ul class="space-y-2 mt-2 text-sm">
-                        <li><a href="#" class="hover:text-[#F85A7E]">Our values</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Advisory board</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Our partners</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Become a partner</a></li>
-                        <li><a href="#" class="hover:text-[#F85A7E]">Future Learn</a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
+                        <li><a href="#" class="hover:text-[#F85A7E]"></a></li>
                     </ul>
                 </div>
                 <div>
                     <h4 class="font-bold mb-2 border-b-2 border-[#F85A7E] inline-block pb-1">Contact Info</h4>
                     <ul class="space-y-2 mt-2 text-sm">
-                        <li><span class="font-semibold">Phone Number</span><br>310-437-2766</li>
-                        <li><span class="font-semibold">Mail Address</span><br>contact@example.com</li>
-                        <li><span class="font-semibold">Address</span><br>706 Campfire Ave. Meriden, CT</li>
+                        <li><span class="font-semibold">Phone Number</span><br></li>
+                        <li><span class="font-semibold">Mail Address</span><br></li>
+                        <li><span class="font-semibold">Address</span><br></li>
                     </ul>
                 </div>
             </div>
@@ -64,7 +64,7 @@
         <!-- Bottom Bar -->
         <div class="mt-10 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm">
             <div class="flex items-center gap-2">
-                <span>Copyright 2025 © <span class="text-[#F85A7E] font-semibold">DreamsLMS</span>. All right reserved.</span>
+                <span>Copyright 2025 © <span class="text-[#F85A7E] font-semibold">MHQuickDev</span>. All right reserved.</span>
                 <div class="flex gap-2 ml-4">
                     <a href="#" class="hover:text-[#F85A7E]"><i class="fa-brands fa-facebook-f"></i></a>
                     <a href="#" class="hover:text-[#F85A7E]"><i class="fa-brands fa-instagram"></i></a>

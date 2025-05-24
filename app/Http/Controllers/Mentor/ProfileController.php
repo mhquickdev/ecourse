@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mentor;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class ProfileController extends Controller
 {
@@ -17,6 +18,22 @@ class ProfileController extends Controller
     public function update(Request $request)
     {
         $mentor = Auth::user();
+
+        // Password reset logic
+        if ($request->filled('current_password') || $request->filled('new_password') || $request->filled('new_password_confirmation')) {
+            $request->validate([
+                'current_password' => 'required',
+                'new_password' => 'required|min:8|confirmed',
+            ]);
+            if (!Hash::check($request->current_password, $mentor->password)) {
+                return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+            }
+            $mentor->password = bcrypt($request->new_password);
+            $mentor->save();
+            return back()->with('success', 'Password updated successfully.');
+        }
+
+        // Profile update logic
         $validated = $request->validate([
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
@@ -39,9 +56,9 @@ class ProfileController extends Controller
         }
 
         // Save education and experience as arrays (let Eloquent handle JSON)
-        $mentor->education = $request->input('education', []);
-        $mentor->experience = $request->input('experience', []);
-        $mentor->skills = $request->input('skills', []);
+        $mentor->education = array_values((array) $request->input('education', []));
+        $mentor->experience = array_values((array) $request->input('experience', []));
+        $mentor->skills = array_values((array) $request->input('skills', []));
 
         $mentor->save();
 

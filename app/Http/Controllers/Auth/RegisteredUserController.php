@@ -39,12 +39,20 @@ class RegisteredUserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role_id' => $request->role_id ?? 2, // Default to student if not provided
         ]);
 
         event(new Registered($user));
 
         Auth::login($user);
 
-        return redirect(route('dashboard', absolute: false));
+        // Redirect based on role_id
+        if ($user->role_id == 3) {
+            return redirect()->route('mentor.dashboard');
+        } elseif ($user->role_id == 2) {
+            return redirect()->route('student.dashboard');
+        } else {
+            return redirect()->route('dashboard');
+        }
     }
 }

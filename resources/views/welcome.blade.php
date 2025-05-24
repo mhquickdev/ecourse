@@ -179,7 +179,7 @@
                 <span class="text-[#F85A7E] font-bold text-base mb-1 block">What's New</span>
                 <h2 class="text-4xl font-extrabold text-[#181818] leading-tight">Featured Courses</h2>
             </div>
-            <a href="#" class="bg-[#F85A7E] text-white font-semibold rounded-full px-8 py-2 text-base shadow hover:bg-[#e13a5e] transition self-start sm:self-auto">View all Categories</a>
+            <a href="{{ route('courses.index') }}" class="bg-[#F85A7E] text-white font-semibold rounded-full px-8 py-2 text-base shadow hover:bg-[#e13a5e] transition self-start sm:self-auto">View all Courses</a>
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             @forelse($courses as $course)
@@ -212,7 +212,7 @@
                                 <span>4.5</span>
                                 <span class="text-gray-400">(15)</span>
                             </div>
-                            <a href="#" class="bg-[#392C7D] text-white font-semibold rounded-full px-6 py-2 text-sm shadow hover:bg-[#2D2363] transition">Buy Now</a>
+                            <a href="{{ route('courses.show', $course->id)}}" class="bg-[#392C7D] text-white font-semibold rounded-full px-6 py-2 text-sm shadow hover:bg-[#2D2363] transition">Buy Now</a>
                         </div>
                     </div>
                 </div>
@@ -448,14 +448,22 @@
 
             <!-- CTA Buttons -->
             <div class="flex flex-col sm:flex-row gap-4">
-                <a href="#" class="bg-[#F85A7E] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#e13a5e] transition shadow-lg text-lg flex items-center justify-center gap-2">
+                @if(!auth()->check())
+                <a href="{{ route('register') }}" class="bg-[#F85A7E] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#e13a5e] transition shadow-lg text-lg flex items-center justify-center gap-2">
                     <i class="fa-solid fa-user-plus"></i>
                     Become an Instructor
                 </a>
+                @elseif (auth()->user()->role_id == 3)
+                <a href="{{ route('mentor.dashboard') }}" class="bg-[#F85A7E] text-white px-8 py-4 rounded-xl font-semibold hover:bg-[#e13a5e] transition shadow-lg text-lg flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-user-pen"></i>
+                    Author Dashboard
+                </a>
+                @endif
                 <a href="#" class="bg-white text-[#2D2363] px-8 py-4 rounded-xl font-semibold hover:bg-gray-50 transition shadow-lg text-lg flex items-center justify-center gap-2 border border-gray-200">
                     <i class="fa-solid fa-info-circle"></i>
                     Learn More
                 </a>
+                
             </div>
         </div>
     </section>

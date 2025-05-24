@@ -21,7 +21,7 @@ class CourseController extends Controller
      */
     public function index()
     {
-        $courses = auth()->user()->courses()->latest()->get();
+        $courses = auth()->user()->courses()->latest()->paginate(12);
         return view('mentor.courses.index', compact('courses'));
     }
 

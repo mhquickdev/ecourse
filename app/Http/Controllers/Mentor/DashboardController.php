@@ -13,18 +13,26 @@ class DashboardController extends Controller
         $coursesQuery = $mentor->courses();
         $courses = $coursesQuery->get();
 
-        $totalCourses = $courses->count();
+        
         $activeCourses = $courses->where('status', 'published')->count();
         $archivedCourses = $courses->where('status', 'archived')->count();
-        $recentCourses = $courses->sortByDesc('created_at')->take(5);
+        $recent_courses = $courses->sortByDesc('created_at')->take(6);
         $totalEarnings = $courses->sum('price');
+        $courses_count = $courses->count();
+        $students_count = $courses->sum('students_count');
+        $average_rating = $courses->avg('rating');
+
 
         return view('mentor.dashboard', compact(
-            'totalCourses',
+            'mentor',
             'activeCourses',
             'archivedCourses',
-            'recentCourses',
-            'totalEarnings'
+            'recent_courses',
+            'totalEarnings',
+            'courses_count',
+            'students_count',
+            'average_rating',
+            'courses'
         ));
     }
 }
