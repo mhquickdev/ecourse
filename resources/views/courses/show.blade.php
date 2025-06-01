@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div x-data="demoVideoModal()">
+<div x-data="{ showFreeEnrollModal: false, freeCourseTitle: '', freeCourseId: null, ...demoVideoModal() }">
 <!-- Course Hero/Header -->
 <div class="relative w-full h-[320px] md:h-[340px] flex items-end justify-start overflow-hidden mb-10">
     <img src="{{ $course->preview_image ? (Str::startsWith($course->preview_image, 'http') ? $course->preview_image : asset('storage/'.$course->preview_image)) : 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=1200&q=80' }}" class="absolute inset-0 w-full h-full object-cover object-center z-0" alt="{{ $course->title }}">
@@ -20,11 +20,21 @@
             </div>
             <div class="flex items-center gap-4 mt-2">
                 <div class="flex items-center gap-2">
-                    <img src="{{ $course->user && $course->user->profile_image ? Storage::url($course->user->profile_image) : 'https://i.pravatar.cc/120' }}" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow" alt="Instructor">
-                    <div>
-                        <div class="font-semibold text-white leading-tight">{{ $course->user->name ?? 'Instructor' }}</div>
-                        <div class="text-xs text-gray-300">Instructor</div>
-                    </div>
+                    @if($course->user)
+                        <a href="{{ route('mentor.profile', $course->user) }}" class="flex items-center gap-2">
+                            <img src="{{ $course->user && $course->user->profile_image ? Storage::url($course->user->profile_image) : 'https://i.pravatar.cc/120' }}" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow" alt="Instructor">
+                            <div>
+                                <div class="font-semibold text-white leading-tight">{{ $course->user->name ?? 'Instructor' }}</div>
+                                <div class="text-xs text-gray-300">Instructor</div>
+                            </div>
+                        </a>
+                    @else
+                        <img src="https://i.pravatar.cc/120" class="w-10 h-10 rounded-full object-cover border-2 border-white shadow" alt="Instructor">
+                         <div>
+                             <div class="font-semibold text-white leading-tight">Instructor</div>
+                             <div class="text-xs text-gray-300">Unknown</div>
+                         </div>
+                    @endif
                 </div>
                 <div class="flex items-center gap-1 ml-6">
                     @for($i = 1; $i <= 5; $i++)
@@ -127,11 +137,21 @@
         <!-- Instructor -->
         <div class="bg-white rounded-2xl shadow-lg p-8 mb-8 flex flex-col md:flex-row gap-8 items-start">
             <div class="flex-shrink-0">
-                <img src="{{ $course->user && $course->user->profile_image ? Storage::url($course->user->profile_image) : 'https://i.pravatar.cc/120' }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg" alt="Instructor">
+                @if($course->user)
+                     <a href="{{ route('mentor.profile', $course->user) }}">
+                        <img src="{{ $course->user && $course->user->profile_image ? Storage::url($course->user->profile_image) : 'https://i.pravatar.cc/120' }}" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg" alt="Instructor">
+                     </a>
+                @else
+                     <img src="https://i.pravatar.cc/120" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-lg" alt="Instructor">
+                @endif
             </div>
             <div class="flex-1 min-w-0">
                 <div class="flex items-center gap-2 mb-1">
-                    <span class="text-2xl font-bold text-gray-900">{{ $course->user->name ?? 'Instructor' }}</span>
+                    @if($course->user)
+                        <a href="{{ route('mentor.profile', $course->user) }}" class="text-2xl font-bold text-gray-900">{{ $course->user->name ?? 'Instructor' }}</a>
+                    @else
+                        <span class="text-2xl font-bold text-gray-900">Instructor</span>
+                    @endif
                     <span class="ml-2 px-3 py-1 text-xs rounded-full bg-blue-100 text-blue-700 font-semibold">Instructor</span>
                 </div>
                 @if($course->user->bio)
@@ -200,10 +220,69 @@
                 @endif
             </div>
             <div class="flex gap-2 mb-6">
-                <button class="flex-1 px-4 py-2 bg-gray-100 rounded-lg text-gray-700 font-semibold hover:bg-gray-200"><i class="fa-regular fa-heart"></i> Wishlist</button>
-                <button class="flex-1 px-4 py-2 bg-gray-100 rounded-lg text-gray-700 font-semibold hover:bg-gray-200"><i class="fa-solid fa-share"></i> Share</button>
+                {{-- Wishlist Button --}}
+                @auth
+                     @if(Auth::user()->isStudent())
+                         <form x-data="{ wishlisted: {{ json_encode(Auth::user()->wishlistedCourses->contains($course->id) ?? false) }} }" @submit.prevent="" class="flex-1">
+                            <button @click="
+                                        fetch('{{ route('wishlist.toggle', $course->id) }}', {
+                                            method: 'POST',
+                                            headers: {
+                                                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                                                'Content-Type': 'application/json',
+                                                'Accept': 'application/json'
+                                            }
+                                        })
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            if (data.status === 'added') {
+                                                wishlisted = true;
+                                            } else if (data.status === 'removed') {
+                                                wishlisted = false;
+                                            }
+                                            console.log(data.message);
+                                        })
+                                        .catch(error => {
+                                            console.error('Error toggling wishlist:', error);
+                                        });
+                                    "
+                                    type="button" 
+                                    class="w-full px-4 py-2 rounded-lg text-gray-700 font-semibold hover:bg-gray-200 transition "
+                                    :class="wishlisted ? 'bg-red-500 text-white hover:bg-red-600' : 'bg-gray-100'">
+                                <i class="fa-heart" :class="wishlisted ? 'fa-solid' : 'fa-regular'"></i> Wishlist
+                            </button>
+                        </form>
+                     @endif
+                 @endauth
+                 @guest
+                      <button class="flex-1 px-4 py-2 bg-gray-100 rounded-lg text-gray-700 font-semibold cursor-not-allowed"><i class="fa-regular fa-heart"></i> Wishlist</button>
+                 @endguest
+                <button onclick="copyCourseLink('{{ route('courses.show', $course->id) }}')" class="flex-1 px-4 py-2 bg-gray-100 rounded-lg text-gray-700 font-semibold hover:bg-gray-200"><i class="fa-solid fa-share"></i> Share</button>
             </div>
-            <button class="w-full bg-[#392C7D] text-white font-bold rounded-lg py-3 text-lg shadow hover:bg-[#2D2363] transition mb-8">Enroll Now</button>
+            @auth
+                @if(Auth::user()->isStudent())
+                    @php
+                        $isEnrolled = Auth::user()->enrolledCourses->contains($course->id);
+                    @endphp
+
+                    @if($isEnrolled)
+                         <a href="{{ route('student.course-content', $course) }}" class="w-full block text-center bg-green-600 text-white font-bold rounded-lg py-3 text-lg shadow hover:bg-green-700 transition mb-8">View Course</a>
+                    @else
+                        @if($course->price == 0)
+                            <button @click="showFreeEnrollModal = true; freeCourseTitle = '{{ $course->title }}'; freeCourseId = {{ $course->id }}" type="button" class="w-full bg-[#392C7D] text-white font-bold rounded-lg py-3 text-lg shadow hover:bg-[#2D2363] transition mb-8">Enroll Now</button>
+                        @else
+                            <form action="{{ route('courses.enroll', $course) }}" method="POST">
+                                @csrf
+                                <button type="submit" class="w-full bg-[#392C7D] text-white font-bold rounded-lg py-3 text-lg shadow hover:bg-[#2D2363] transition mb-8">Enroll Now</button>
+                            </form>
+                        @endif
+                    @endif
+                @else
+                     <button class="w-full bg-gray-400 text-white font-bold rounded-lg py-3 text-lg shadow cursor-not-allowed mb-8" disabled>Enrollment for non-students disabled</button>
+                @endif
+            @else
+                 <a href="{{ route('login') }}" class="w-full block text-center bg-[#392C7D] text-white font-bold rounded-lg py-3 text-lg shadow hover:bg-[#2D2363] transition mb-8">Login to Enroll</a>
+            @endauth
             <div class="mb-6">
                 <h4 class="font-semibold mb-3 flex items-center gap-2"><i class="fa-solid fa-list-ul text-blue-400"></i> Includes</h4>
                 <ul class="text-sm text-gray-700 space-y-1">
@@ -281,6 +360,18 @@
         </template>
     </div>
 </div>
+<!-- Free Enrollment Confirmation Modal -->
+<div x-show="showFreeEnrollModal" style="display: none;" class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60">
+    <div class="bg-white rounded-2xl shadow-lg w-full max-w-sm relative overflow-hidden p-8">
+        <button @click="showFreeEnrollModal = false" type="button" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl">&times;</button>
+        <h3 class="text-xl font-bold text-gray-900 mb-4">Confirm Enrollment</h3>
+        <p class="text-gray-700 mb-6">You are about to enroll in the free course: <span class="font-semibold" x-text="freeCourseTitle"></span>.</p>
+        <form :action="'{{ url('/student/courses/') }}' + '/' + freeCourseId + '/enroll-free'" method="POST">
+            @csrf
+            <button type="submit" class="w-full bg-green-600 text-white font-bold rounded-lg py-3 text-lg shadow hover:bg-green-700 transition">Confirm Enrollment</button>
+        </form>
+    </div>
+</div>
 <script>
 function demoVideoModal() {
     return {
@@ -315,6 +406,15 @@ function demoVideoModal() {
             return id ? `https://www.youtube.com/embed/${id}` : '';
         }
     }
+}
+
+function copyCourseLink(link) {
+    navigator.clipboard.writeText(link).then(() => {
+        alert('Course link copied to clipboard!');
+    }).catch(err => {
+        console.error('Failed to copy link: ', err);
+        alert('Failed to copy course link.');
+    });
 }
 </script>
 @endsection 

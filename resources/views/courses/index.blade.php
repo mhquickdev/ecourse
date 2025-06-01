@@ -66,6 +66,8 @@
                                     'reviews' => '180', // static for now
                                     'price' => $course->price ?? '0',
                                     'url' => route('courses.show', $course),
+                                    'course' => $course,
+                                    'isWishlisted' => Auth::check() && Auth::user()->isStudent() ? Auth::user()->wishlistedCourses->contains($course->id) : false
                                 ])
                             @empty
                                 <div class="col-span-full text-center text-gray-400 py-12">No courses found.</div>

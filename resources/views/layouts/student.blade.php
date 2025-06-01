@@ -25,18 +25,21 @@
                 <a href="{{ route('student.dashboard') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('student.dashboard') ? 'bg-[#22D3EE] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
                     <i class="fa-solid fa-home"></i> Dashboard
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
+                <a href="{{ route('student.my-courses') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('student.my-courses') ? 'bg-[#22D3EE] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
                     <i class="fa-solid fa-book"></i> My Courses
+                </a>
+                <a href="{{ route('student.wishlist') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('student.wishlist') ? 'bg-[#22D3EE] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
+                    <i class="fa-solid fa-heart"></i> Wishlist
                 </a>
                 <a href="{{ route('student.profile') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('student.profile') ? 'bg-[#34D399] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
                     <i class="fa-solid fa-user"></i> Profile
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
-                    <i class="fa-solid fa-certificate"></i> Certificates
+                <a href="{{ route('student.transactions.index') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('student.transactions.index') ? 'bg-[#22D3EE] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
+                    <i class="fa-solid fa-list"></i> Transactions
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
+                {{-- <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
                     <i class="fa-solid fa-cog"></i> Settings
-                </a>
+                </a> --}}
             </nav>
             <div class="p-4 border-t text-xs text-gray-400">MHQuickDEV &copy; 2025</div>
         </aside>

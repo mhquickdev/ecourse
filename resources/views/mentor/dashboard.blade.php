@@ -32,11 +32,11 @@
                                 </div>
                                 <div>
                                     <div class="text-lg font-bold text-green-600">Total Students</div>
-                                    <div class="text-2xl font-extrabold text-green-800">{{ $students_count }}</div>
+                                    <div class="text-2xl font-extrabold text-green-800">{{ $totalStudents }}</div>
                                 </div>
                                 <span class="absolute top-4 right-4 bg-green-600 text-white text-xs font-bold px-4 py-1 rounded-full">Enrolled</span>
                             </div>
-                            <div class="flex-1 bg-yellow-100 rounded-2xl shadow-lg flex items-center p-6 relative overflow-hidden">
+                            <div class="flex-1 bg-yellow-100 rounded-2xl shadow-lg flex items-center p-6 relative overflow-hidden hidden">
                                 <div class="flex items-center justify-center w-16 h-16 bg-yellow-200 rounded-xl mr-4">
                                     <i class="fa-solid fa-star text-3xl text-yellow-500"></i>
                                 </div>

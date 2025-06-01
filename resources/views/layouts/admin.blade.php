@@ -49,6 +49,10 @@
                 </div>
             </div>
 
+            <a href="{{ route('admin.advanced-applications.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-[#F3F4F6] {{ request()->routeIs('admin.advanced-course-applications.*') ? 'bg-[#392C7D] text-white' : '' }}">
+                <i class="fa fa-tag"></i> Advanced Course Applications
+            </a>
+
             <a href="{{ route('admin.settings.index') }}" class="flex items-center gap-3 px-4 py-2 rounded-lg font-semibold text-gray-700 hover:bg-[#F3F4F6] {{ request()->routeIs('admin.settings.*') ? 'bg-[#392C7D] text-white' : '' }}">
                 <i class="fa fa-cog"></i> Settings
             </a>

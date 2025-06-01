@@ -28,7 +28,7 @@
         <!-- Right Side (Desktop) -->
         <div class="hidden md:flex items-center gap-3">
             <!-- Language -->
-            <div class="flex items-center gap-2">
+            <div class="flex items-center gap-2 hidden">
                 <span class="flex items-center gap-1 cursor-pointer text-sm font-medium"><img src="https://flagcdn.com/us.svg" class="w-5 h-5 rounded-full" alt="ENG"> ENG <i class="fa-solid fa-chevron-down text-xs"></i></span>
             </div>
             @guest

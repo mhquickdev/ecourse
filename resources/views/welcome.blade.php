@@ -183,39 +183,20 @@
         </div>
         <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             @forelse($courses as $course)
-                <div class="bg-white border border-[#eee] rounded-2xl shadow-sm hover:shadow-lg transition flex flex-col overflow-hidden">
-                    <div class="relative">
-                        <img src="{{ $course->preview_image ? (Str::startsWith($course->preview_image, 'http') ? $course->preview_image : asset('storage/'.$course->preview_image)) : 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80' }}" class="w-full h-48 object-cover" alt="{{ $course->title }}">
-                        @if($course->is_free)
-                            <span class="absolute top-4 left-4 bg-[#22C55E] text-white font-bold px-4 py-1 rounded-full text-sm">Free</span>
-                        @else
-                            <span class="absolute top-4 left-4 bg-[#F85A7E] text-white font-bold px-4 py-1 rounded-full text-sm">${{ number_format($course->price, 2) }}</span>
-                        @endif
-                        <button class="absolute top-4 right-4 bg-white/80 rounded-full p-2 shadow hover:bg-[#F85A7E] hover:text-white transition"><i class="fa-regular fa-heart"></i></button>
-                    </div>
-                    <div class="p-5 flex-1 flex flex-col">
-                        <div class="flex items-center gap-3 mb-3">
-                            <img src="{{ $course->user && $course->user->profile_image ? Storage::url($course->user->profile_image) : 'https://i.pravatar.cc/120' }}" class="w-10 h-10 rounded-full object-cover" alt="Instructor">
-                            <div class="text-left">
-                                <div class="font-semibold text-base text-[#181818] leading-tight">{{ $course->user->name ?? 'Instructor' }}</div>
-                                <div class="text-sm text-gray-400">Instructor</div>
-                            </div>
-                        </div>
-                        <div class="font-bold text-[#181818] text-lg mb-2 line-clamp-2">{{ $course->title }}</div>
-                        <div class="flex items-center gap-4 text-sm text-gray-500 mb-4">
-                            <span><i class="fa-regular fa-file-lines mr-1 text-[#F85A7E]"></i>12+ Lesson</span>
-                            <span><i class="fa-regular fa-clock mr-1 text-[#392C7D]"></i>9hr 30min</span>
-                        </div>
-                        <div class="flex items-center justify-between mt-auto">
-                            <div class="flex items-center gap-1 text-[#FBBF24] text-base">
-                                <i class="fa-solid fa-star"></i>
-                                <span>4.5</span>
-                                <span class="text-gray-400">(15)</span>
-                            </div>
-                            <a href="{{ route('courses.show', $course->id)}}" class="bg-[#392C7D] text-white font-semibold rounded-full px-6 py-2 text-sm shadow hover:bg-[#2D2363] transition">Buy Now</a>
-                        </div>
-                    </div>
-                </div>
+                 @include('components.course-card', [
+                    'image' => $course->preview_image ? (Str::startsWith($course->preview_image, 'http') ? $course->preview_image : asset('storage/'.$course->preview_image)) : 'https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80',
+                    'discount' => $course->is_free ? 'Free' : null,
+                    'instructor_avatar' => $course->user && $course->user->profile_image ? Storage::url($course->user->profile_image) : 'https://i.pravatar.cc/120',
+                    'instructor' => $course->user->name ?? 'Instructor',
+                    'category' => $course->category->name ?? 'General',
+                    'title' => $course->title,
+                    'rating' => '4.5', // Static rating for now
+                    'reviews' => '15', // Static reviews for now
+                    'price' => $course->is_free ? 'Free' : number_format($course->price, 2),
+                    'url' => route('courses.show', $course),
+                    'course' => $course, // Pass the course object for wishlist toggle
+                     'isWishlisted' => Auth::check() && Auth::user()->isStudent() ? Auth::user()->wishlistedCourses->contains($course->id) : false // Pass wishlist status
+                 ])
             @empty
                 <!-- Fallback static cards if no courses -->
                 @for($i = 0; $i < 3; $i++)
@@ -223,7 +204,7 @@
                     <div class="relative">
                         <img src="https://images.unsplash.com/photo-1513258496099-48168024aec0?auto=format&fit=crop&w=600&q=80" class="w-full h-48 object-cover" alt="Course">
                         <span class="absolute top-4 left-4 bg-[#F85A7E] text-white font-bold px-4 py-1 rounded-full text-sm">$200 <span class="line-through text-xs text-white/70 ml-1">$900.00</span></span>
-                        <button class="absolute top-4 right-4 bg-white/80 rounded-full p-2 shadow hover:bg-[#F85A7E] hover:text-white transition"><i class="fa-regular fa-heart"></i></button>
+                        {{-- Wishlist button not functional for static cards --}}
                     </div>
                     <div class="p-5 flex-1 flex flex-col">
                         <div class="flex items-center gap-3 mb-3">
@@ -324,50 +305,30 @@
                 <span class="text-[#F85A7E] font-bold text-base mb-1 block">Featured Instructor</span>
                 <h2 class="text-4xl font-extrabold text-[#181818] leading-tight">Learn from the best mentors</h2>
             </div>
-             <!-- Optional: Add a View All button here if needed based on design -->
-             <!-- <a href="#" class="bg-[#F85A7E] text-white font-semibold rounded-full px-8 py-3 text-base shadow hover:bg-[#e13a5e] transition self-start sm:self-auto">View all Instructors</a> -->
+            <a href="{{ route('mentors.index') }}" class="bg-[#F85A7E] text-white font-semibold rounded-full px-8 py-3 text-base shadow hover:bg-[#e13a5e] transition self-start sm:self-auto">View all Mentors</a>
         </div>
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
-            @forelse($mentors as $mentor)
-            <!-- Instructor Card -->
-            <div class="bg-white border border-[#eee] rounded-2xl shadow-sm hover:shadow-lg transition flex flex-col overflow-hidden">
-                <div class="relative">
-                    <img src="{{ $mentor->profile_image ? Storage::url($mentor->profile_image) : 'https://i.pravatar.cc/400?img=' . ($loop->index + 1) }}" class="w-full h-64 object-cover" alt="{{ $mentor->name }}">
-                    <span class="absolute top-4 left-4 bg-green-500 text-white rounded-full p-1"><i class="fa-solid fa-check text-xs"></i></span>
-                    <span class="absolute top-4 right-4 bg-black/50 text-white text-xs font-semibold px-3 py-1 rounded-full">{{ $mentor->courses()->count() }} Courses</span>
-                    <button class="absolute bottom-4 right-4 bg-white/80 rounded-full p-2 shadow hover:bg-[#F85A7E] hover:text-white transition"><i class="fa-regular fa-heart"></i></button>
-                </div>
-                <div class="p-5 flex flex-col items-center text-center">
-                    <span class="font-extrabold text-lg text-[#181818]">{{ $mentor->name }}</span>
-                    <span class="text-gray-500 text-sm mb-3">Instructor Title</span> {{-- Static Placeholder --}}
-                    <div class="flex items-center gap-4 text-gray-500 text-xs">
-                        <span><i class="fa-solid fa-book-open text-[#F85A7E] mr-1"></i>50 Students</span> {{-- Static Placeholder --}}
-                        <span><i class="fa-solid fa-graduation-cap text-[#392C7D] mr-1"></i>{{ $mentor->courses()->count() }} Courses</span>
-                    </div>
-                </div>
+        @if($mentors->count())
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+                @foreach($mentors as $mentor)
+                    <a href="{{ route('mentor.profile', $mentor) }}" class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition flex flex-col overflow-hidden border border-gray-100">
+                        <div class="relative h-48 bg-gray-200 flex items-center justify-center overflow-hidden">
+                             {{-- Placeholder for mentor cover image if available --}}
+                             <img src="{{ $mentor->profile_image ? Storage::url($mentor->profile_image) : 'https://i.pravatar.cc/150?u='.$mentor->id }}" class="w-full h-full object-cover object-center" alt="{{ $mentor->name }}">
+                        </div>
+                        <div class="p-5 text-center">
+                            <h3 class="font-bold text-[#181818] text-lg mb-1">{{ $mentor->name }}</h3>
+                            <p class="text-gray-500 text-sm">{{ $mentor->instructor_title ?? 'Instructor' }}</p>
+                            <div class="flex items-center justify-center gap-4 mt-4 text-gray-600 text-sm">
+                                <span><i class="fa-solid fa-users mr-1 text-pink-500"></i>{{ $mentor->enrolled_students_count ?? '0' }} Students</span>
+                                <span><i class="fa-solid fa-book mr-1 text-blue-500"></i>{{ $mentor->courses_count }} Courses</span>
+                            </div>
+                        </div>
+                    </a>
+                @endforeach
             </div>
-            @empty
-            <!-- Fallback static cards if no mentors -->
-             @for($i = 0; $i < 4; $i++)
-             <div class="bg-white border border-[#eee] rounded-2xl shadow-sm hover:shadow-lg transition flex flex-col overflow-hidden">
-                 <div class="relative">
-                     <img src="https://images.unsplash.com/photo-1511367461989?auto=format&fit=crop&w=400&q=80" class="w-full h-64 object-cover" alt="Instructor">
-                     <span class="absolute top-4 left-4 bg-green-500 text-white rounded-full p-1"><i class="fa-solid fa-check text-xs"></i></span>
-                     <span class="absolute top-4 right-4 bg-black/50 text-white text-xs font-semibold px-3 py-1 rounded-full">20 Courses</span>
-                     <button class="absolute bottom-4 right-4 bg-white/80 rounded-full p-2 shadow hover:bg-[#F85A7E] hover:text-white transition"><i class="fa-regular fa-heart"></i></button>
-                 </div>
-                 <div class="p-5 flex flex-col items-center text-center">
-                     <span class="font-extrabold text-lg text-[#181818]">David Lee</span>
-                     <span class="text-gray-500 text-sm mb-3">Web Developer</span>
-                     <div class="flex items-center gap-4 text-gray-500 text-xs">
-                         <span><i class="fa-solid fa-book-open text-[#F85A7E] mr-1"></i>50 Students</span>
-                         <span><i class="fa-solid fa-graduation-cap text-[#392C7D] mr-1"></i>20 Courses</span>
-                     </div>
-                 </div>
-             </div>
-             @endfor
-            @endforelse
-        </div>
+        @else
+            <p class="text-gray-600 text-center">No featured mentors found.</p>
+        @endif
     </section>
 </div>
 

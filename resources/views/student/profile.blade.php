@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.student')
 
 @section('header')
     <h2 class="text-2xl font-bold text-gray-800 leading-tight">
@@ -7,9 +7,9 @@
 @endsection
 
 @section('content')
-<div class="min-h-screen flex flex-col items-center justify-center bg-gray-50 py-8" x-data="studentProfileForm()" x-init="initImagePreview()">
+<div class="min-h-screen flex flex-col items-center  bg-gray-50 pb-8" x-data="studentProfileForm()" x-init="initImagePreview()">
     <div class="max-w-3xl w-full">
-        <p class="text-gray-500 mb-6">Update your student profile information</p>
+        <p class="hidden text-gray-500 mb-6">Update your student profile information</p>
         @if(session('success'))
             <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">{{ session('success') }}</div>
         @endif

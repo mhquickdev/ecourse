@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
+use App\Models\Category;
+use App\Models\CourseModule;
+use App\Models\Enrollment;
 
 class Course extends Model
 {
@@ -25,6 +29,14 @@ class Course extends Model
         'is_free' => 'boolean',
         'price' => 'decimal:2'
     ];
+
+    /**
+     * Get the user (mentor) that owns the course.
+     */
+    public function mentor()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 
     public function user()
     {
@@ -49,5 +61,17 @@ class Course extends Model
     public function tags()
     {
         return $this->hasMany(CourseTag::class);
+    }
+
+    public function enrollments()
+    {
+        return $this->hasMany(Enrollment::class);
+    }
+
+    public function enrolledStudents()
+    {
+        return $this->belongsToMany(User::class, 'enrollments')
+            ->withPivot(['enrolled_at', 'completed_at', 'payment_status'])
+            ->withTimestamps();
     }
 }

@@ -29,16 +29,19 @@
                 </a>
                 <a href="{{ route('mentor.courses.index') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('mentor.courses.*') ? 'bg-[#F472B6] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
                     <i class="fa-solid fa-book"></i> Courses
+                </a>                
+                <a href="{{ route('mentor.students.index') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('mentor.students.index') ? 'bg-[#22D3EE] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
+                    <i class="fa-solid fa-users"></i> Students
                 </a>
-                <a href="{{ route('mentor.profile') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('mentor.profile') ? 'bg-[#34D399] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
+                <a href="{{ route('mentor.my-profile') }}" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 {{ request()->routeIs('mentor.my-profile') ? 'bg-[#34D399] text-white shadow-lg' : 'hover:bg-gray-100 text-gray-700' }}">
                     <i class="fa-solid fa-user"></i> Profile
                 </a>
-                <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
+                {{-- <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
                     <i class="fa-solid fa-dollar-sign"></i> Earnings
                 </a>
                 <a href="#" class="flex items-center px-4 py-3 rounded-xl font-semibold gap-3 transition shadow-sm mb-1 hover:bg-gray-100 text-gray-700">
                     <i class="fa-solid fa-cog"></i> Settings
-                </a>
+                </a> --}}
             </nav>
             <div class="p-4 border-t text-xs text-gray-400">MHQuickDEV &copy; 2025</div>
         </aside>
@@ -62,7 +65,7 @@
                             <svg class="w-4 h-4 ml-1 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                         </button>
                         <div x-show="open" @click.away="open = false" x-transition class="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                            <a href="{{ route('mentor.profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50"><i class="fa-solid fa-user mr-2"></i>Profile Settings</a>
+                            <a href="{{ route('mentor.my-profile') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50"><i class="fa-solid fa-user mr-2"></i>Profile Settings</a>
                             <a href="{{ route('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-blue-50"><i class="fa-solid fa-sign-out-alt mr-2"></i>Logout</a>
                         </div>
                     </div>
